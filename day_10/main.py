@@ -16,16 +16,12 @@ def main(filename):
         name = command[0]
         
         for _ in range(k[command[0]]):
-            # print(f'cycle : {cycle} --- x: {x}')
-            # if cycle in checks:
             print(f'===============cycle {cycle % 40}: x={x} : cyclex = {int(math.floor((cycle-1)/40))} : {(cycle % 40) in [x-1,x,x+1]}')
             screen[int(math.floor((cycle-1)/40))].append('#' if (cycle%40)-1 in [x-1,x,x+1] else '.')
-                # sums.append(cycle * x)  
             cycle += 1
         
         if name == "addx": x += int(command[1])
     
-    # [[print(character, end='') for character in line] for line in screen]
     for line in screen:
         for character in line:
             print(character,end='')

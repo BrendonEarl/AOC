@@ -1,12 +1,21 @@
 import operator
 import math
 import bisect
+class Item():
 
+    def __init__(self, val, owner) -> None:
+        self.val = val
+        self.owner = owner
+        self.owners = [owner]
+    
+    def __repr__(self) -> str:
+        return self.val
+    
 class Monkey():
 
     def __init__(self,id, items, operation, test) -> None:
         self.id = id
-        self.items = items
+        self.items = [Item(item,id) for item in items]
         self.operation = operation
         self.test, self.ifTrue, self.ifFalse = test
         self.inspectCount = 0
@@ -20,9 +29,9 @@ class Monkey():
         falseItems = []
         while self.items:
             inspect = self.items.pop(0)
-            inspect = self.operation[0](inspect,self.operation[1] if str(self.operation[1]).isnumeric() else inspect)
-            inspect = int((inspect-inspect%3)/3)
-            if inspect%self.test == 0:
+            inspect.val = self.operation[0](inspect.val,self.operation[1] if str(self.operation[1]).isnumeric() else inspect.val)
+            # inspect.val = int((inspect.val-inspect.val%3)/3)
+            if inspect.val%self.test == 0:
                 trueItems.append(inspect)
             else:
                 falseItems.append(inspect)
@@ -53,7 +62,7 @@ def main(filename):
             )
         )
     
-    for round in range(20):
+    for round in range(1000):
         # print('----------------------------------------')
         
         for monkey in monkeys:
@@ -61,9 +70,13 @@ def main(filename):
             if ch:
                 tr, fl = ch
                 if tr[1]:
+                    for item in tr[1]:
+                        item.owners.append(tr[0])
                     [monkeys[tr[0]].items.append(item) for item in tr[1]]
                     
                 if fl[1]:
+                    for item in fl[1]:
+                        item.owners.append(fl[0])
                     [monkeys[fl[0]].items.append(item) for item in fl[1]]
 
         #     print(ch)
@@ -73,6 +86,8 @@ def main(filename):
 
     highest = []
     for monkey in monkeys:
+        for item in monkey.items:
+            print(f' : {item.owners}')
         bisect.insort(highest,monkey.inspectCount)
     
     print(math.prod(highest[-2:]))
