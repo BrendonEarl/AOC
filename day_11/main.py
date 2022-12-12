@@ -19,6 +19,7 @@ class Monkey():
         self.operation = operation
         self.test, self.ifTrue, self.ifFalse = test
         self.inspectCount = 0
+        self.track = 0
 
     def __repr__(self) -> str:
         return f'{self.id}: {self.items} \n\t {self.operation} \n\t\t {self.test}--{self.ifTrue}:{self.ifFalse}'
@@ -27,6 +28,7 @@ class Monkey():
         if not self.items: return None
         trueItems = []
         falseItems = []
+        self.track = 0
         while self.items:
             inspect = self.items.pop(0)
             inspect.val = self.operation[0](inspect.val,self.operation[1] if str(self.operation[1]).isnumeric() else inspect.val)
@@ -36,6 +38,7 @@ class Monkey():
             else:
                 falseItems.append(inspect)
             self.inspectCount += 1
+            self.track += 1
         return [[self.ifTrue,trueItems],[self.ifFalse,falseItems]]
 
 def main(filename):
@@ -61,12 +64,16 @@ def main(filename):
                     int(line[5][-1])]
             )
         )
-    
-    for round in range(1000):
+    insp = []
+    for monkey in monkeys:
+        insp.append(monkey.track)
+    for round in range(120):
         # print('----------------------------------------')
         
         for monkey in monkeys:
             ch = monkey.operate()
+            insp[monkey.id] = monkey.track
+            
             if ch:
                 tr, fl = ch
                 if tr[1]:
@@ -78,19 +85,20 @@ def main(filename):
                     for item in fl[1]:
                         item.owners.append(fl[0])
                     [monkeys[fl[0]].items.append(item) for item in fl[1]]
-
+        print(insp[1],end=' ')
         #     print(ch)
         # for monkey in monkeys:
         #     print(monkey)
-        print(round)
+        # print()
 
     highest = []
-    for monkey in monkeys:
-        for item in monkey.items:
-            print(f' : {item.owners}')
-        bisect.insort(highest,monkey.inspectCount)
+    # for monkey in monkeys:
+    #     for item in monkey.items:
+    #         print(f' : {item.owners}')
+    #         print('\n\n')
+    #     bisect.insort(highest,monkey.inspectCount)
     
-    print(math.prod(highest[-2:]))
+    # print(math.prod(highest[-2:]))
 
         
 
