@@ -3,18 +3,17 @@ from os import system
 maxX,minX,maxY = 500,500,0
 cave = []
 
-def prnt(array):
+def prnt(array, min=0):
     global minX,maxX
     system('clear')
-    for i, rowvals in enumerate(array):
-        for j, val in enumerate(rowvals[minX-2:]):
+    for i, rowvals in enumerate(array[min:]):
+        for j, val in enumerate(rowvals[minX-2:maxX +5]):
             print(val, end=' ')
         print()
 
 def addWalls(instruction):
     global cave
     x, y = 0, 1
-    print(instruction)
     for i in range(1,len(instruction)):
         fi, si = instruction[i], instruction[i-1]
         
@@ -24,7 +23,6 @@ def addWalls(instruction):
                 why = range(fi[y], si[y] +1)
             else:
                 why = range(si[y], fi[y] +1)
-            print(f'{ex} : {why}')
             for j in why:
                 cave[j][ex] = '#'
         elif fi[y]==si[y]:
@@ -33,12 +31,47 @@ def addWalls(instruction):
                 ex = range(fi[x], si[x] +1)
             else:
                 ex = range(si[x], fi[x] +1)
-            print(f'{why} : {ex}')
             for j in ex:
                 cave[why][j] = '#'
-                prnt(cave)
 
-    
+def playgame(cave, part1=False):
+    isWallOrSand = lambda y, x : cave[y][x] == '#' or cave[y][x] == 'o'
+    grains = 0
+    break_flag = False
+
+    while True:
+        if break_flag: return grains -1 if part1 else grains
+        grains += 1
+        grainy,grainx = 0,500
+        while True:
+            if part1:
+                if grainy + 1 > maxY:
+                    break_flag = True
+                    break
+            if isWallOrSand(grainy+1,grainx):
+                if isWallOrSand(grainy+1,grainx-1):
+                    if isWallOrSand(grainy+1,grainx+1):
+                        cave[grainy][grainx] = 'o'
+                        if grainy == 0 and grainx == 500:
+                            break_flag = True
+                        if grains % 20 == 0:
+                            prnt(cave)
+                        break
+                    else:
+                        grainy += 1
+                        grainx +=1
+                else:
+                    grainy += 1
+                    grainx -= 1
+            else:
+                grainy += 1
+
+            
+                    
+
+
+
+
 
 def main(filename):
     global maxX,minX,maxY,cave
@@ -56,17 +89,22 @@ def main(filename):
 
     for _ in range(maxY+2):
         new = []
-        for _ in range(maxX +2):
+        for _ in range(maxX * 2):
             new.append('.')
         cave.append(new)
     
     cave[0][500] = 'x'
     for instruction in wallInstructions:
         addWalls(instruction)
-    prnt(cave)
+    floor = []
+    for i in range(maxX*2):
+        floor.append('#')
+    cave.append(floor)
 
-    print(f'\n{minX-1} {maxX+1} : {maxY+1}')
+    print(playgame(cave))
+
 real = 'resources/input_14.txt'
 test = 'resources/input_14_test.txt'
+
 
 main(real)
