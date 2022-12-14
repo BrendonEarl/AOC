@@ -3,6 +3,8 @@ import numpy as np
 world = []
 maxLength = 0 
 iterations = 0
+allvisited = []
+goal = []
 
 class Cell():
     def __init__(self,up,left,down,right,val) -> None:
@@ -11,17 +13,56 @@ class Cell():
         self.down = down
         self.right = right
         self.val = val
+        self.priorities = [0,0,0,0]
 
     def __repr__(self) -> str:
         return str(self.val)
 
-    
+    def definePriorities(self, row, col):
+        goalrow, goalcol = goal
+        if self.right:
+            
+            if world[row][col+1].val > world[row][col].val:
+                self.priorities[0] = 3
+            elif world[row][col+1].val == world[row][col].val:
+                self.priorities[0] = 2
+            else:
+                self.priorities[0] = 0
+            
+            if goalcol > col: self.priorities[0] += 1
+        if self.up:
+            if world[row-1][col].val > world[row][col].val:
+                self.priorities[1] = 3
+            elif world[row-1][col].val == world[row][col].val:
+                self.priorities[1] = 2
+            else:
+                self.priorities[1] = 0
+            
+            if goalrow < row: self.priorities[1] += 1
+        if self.down:
+            if world[row+1][col].val > world[row][col].val:
+                self.priorities[2] = 3
+            elif world[row+1][col].val == world[row][col].val:
+                self.priorities[2] = 2
+            else:
+                self.priorities[2] = 0
+            
+            if goalrow > row: self.priorities[2] += 1
+        if self.left:
+            if world[row][col-1].val > world[row][col].val:
+                self.priorities[2] = 3
+            elif world[row][col-1].val == world[row][col].val:
+                self.priorities[2] = 2
+            else:
+                self.priorities[2] = 0
+            
+            if goalcol < col: self.priorities[3] += 1
 
 
 def possibleDirectionsFromPoint(row, col, val, arr):
     maxRow, maxCol = [num-1 for num in arr.shape]
     directions = []
-    canHike = lambda val, check : val >= check or check == val+1
+    canHike = lambda val, check : val == check or check == val+1
 
 
     directions.append(row != 0 and canHike(val,arr[row-1][col]))
@@ -37,7 +78,7 @@ def findSmallestPath(man,goal):
     # print(world)
 
 def fsp(rowCol,goal,length,visited):
-    global maxLength, iterations
+    global maxLength, iterations, allvisited
     iterations += 1
     if iterations % 1000000 == 0: 
         print(f'{iterations} : {length}')
@@ -50,7 +91,8 @@ def fsp(rowCol,goal,length,visited):
             print()
         print(f'{visited}-                  -                       -                          -                        -                       -                                -                       -                       - ')
     # print(length)
-    if rowCol == goal: 
+    if rowCol == goal:
+        print('found') 
         maxLength = length if (not maxLength or length<maxLength) else maxLength
         return True
     if maxLength and length > maxLength:
@@ -65,22 +107,106 @@ def fsp(rowCol,goal,length,visited):
     
        
     row,col = rowCol
+    allvisited.append(rowCol)
+    
     if world[row][col].right:
-        fsp([row,col+1],goal,length+1,test)
+        if world[row][col].priorities[0]==4:
+            if [row,col+1] in allvisited:
+                world[row][col].priorities[0] = 1
+            else:
+                fsp([row,col+1],goal,length+1,test)
     if world[row][col].up:
-        fsp([row-1,col],goal,length+1,test)
+        if world[row][col].priorities[1]==4:
+            if [row -1,col] in allvisited:
+                world[row][col].priorities[1] = 1
+            else:
+                fsp([row-1,col],goal,length+1,test)
     if world[row][col].down:
-        fsp([row+1,col],goal,length+1,test)
+        if world[row][col].priorities[2]==4:
+            if [row +1,col] in allvisited:
+                world[row][col].priorities[2] = 1
+            else:
+                fsp([row+1,col],goal,length+1,test)
     if world[row][col].left:
-        fsp([row,col-1],goal,length+1,test)
+        if world[row][col].priorities[3]==4:
+            if [row ,col-1] in allvisited:
+                world[row][col].priorities[2] = 1
+            else:
+                fsp([row,col -1],goal,length+1,test)
+
+    if world[row][col].right:
+        if world[row][col].priorities[0]==3:
+            if [row,col+1] in allvisited:
+                world[row][col].priorities[0] = 1
+            else:
+                fsp([row,col+1],goal,length+1,test)
+    if world[row][col].up:
+        if world[row][col].priorities[1]==3:
+            if [row -1,col] in allvisited:
+                world[row][col].priorities[1] = 1
+            else:
+                fsp([row-1,col],goal,length+1,test)
+    if world[row][col].down:
+        if world[row][col].priorities[2]==3:
+            if [row +1,col] in allvisited:
+                world[row][col].priorities[2] = 1
+            else:
+                fsp([row+1,col],goal,length+1,test)
+    if world[row][col].left:
+        if world[row][col].priorities[3]==3:
+            if [row ,col-1] in allvisited:
+                world[row][col].priorities[2] = 1
+            else:
+                fsp([row,col -1],goal,length+1,test)
+
+
+    if world[row][col].right:
+        if world[row][col].priorities[0]==2:
+            if [row,col+1] in allvisited:
+                world[row][col].priorities[0] = 1
+            else:
+                fsp([row,col+1],goal,length+1,test)
+    if world[row][col].up:
+        if world[row][col].priorities[1]==2:
+            if [row -1,col] in allvisited:
+                world[row][col].priorities[1] = 1
+            else:
+                fsp([row-1,col],goal,length+1,test)
+    if world[row][col].down:
+        if world[row][col].priorities[2]==2:
+            if [row +1,col] in allvisited:
+                world[row][col].priorities[2] = 1
+            else:
+                fsp([row+1,col],goal,length+1,test)
+    if world[row][col].left:
+        if world[row][col].priorities[3]==2:
+            if [row ,col-1] in allvisited:
+                world[row][col].priorities[2] = 1
+            else:
+                fsp([row,col -1],goal,length+1,test)
+
+    if world[row][col].right:
+        if world[row][col].priorities[0]==1:
+            fsp([row,col+1],goal,length+1,test)
+    if world[row][col].up:
+        if world[row][col].priorities[1]==1:
+            fsp([row-1,col],goal,length+1,test)
+    if world[row][col].down:
+        if world[row][col].priorities[2]==1:
+            fsp([row+1,col],goal,length+1,test)
+    if world[row][col].left:
+        if world[row][col].priorities[3]==1:
+            fsp([row,col-1],goal,length+1,test)
+    
+    
     
 
 def main(filename):
-    global maxLength
+    global maxLength,goal
     temp = np.array([[ord(character) for character in line.strip()] for line in open(filename).readlines()],dtype=int)
     shape = temp.shape
     is_edge = lambda row, col, shape: (row in [0,shape[0]-1]) or (col in [0, shape[1]-1])
-    man, goal= [0,0], [0,0]
+    man = [0,0]
     
     for row, rowVals in enumerate(temp):
         for col, val in enumerate(rowVals):
@@ -116,10 +242,10 @@ def main(filename):
         # print()
     # print(world)
 
-    for row in world:
-        for val in row:
-            print('>' if val.right else '-', end=' ') 
-        print()
+    for row, rowVals in enumerate(world):
+        for col, val in enumerate(rowVals):
+            val.definePriorities(row, col)
+            print(val.priorities)
     print(world[man[0]][man[1]].down)
     print(ord('z'))
     findSmallestPath(man,goal)
@@ -127,4 +253,4 @@ def main(filename):
     
     
 
-main('resources/input_12.txt')
+main('resources/input_12_test.txt')
