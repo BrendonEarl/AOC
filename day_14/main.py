@@ -66,14 +66,8 @@ def playgame(cave, part1=False):
             else:
                 grainy += 1
 
-            
-                    
 
-
-
-
-
-def main(filename):
+def main(filename, part1=False):
     global maxX,minX,maxY,cave
     wallInstructions = [[[int(index) for index in pair.strip().split(',')] for pair in line.split('->')] for line in open(filename).read().strip().split('\n')]
     [print(instruction) for instruction in wallInstructions]
@@ -96,12 +90,13 @@ def main(filename):
     cave[0][500] = 'x'
     for instruction in wallInstructions:
         addWalls(instruction)
-    floor = []
-    for i in range(maxX*2):
-        floor.append('#')
-    cave.append(floor)
+    if not part1:
+        floor = []
+        for i in range(maxX*2):
+            floor.append('#')
+        cave.append(floor)
 
-    print(playgame(cave))
+    print(playgame(cave,part1))
 
 real = 'resources/input_14.txt'
 test = 'resources/input_14_test.txt'
