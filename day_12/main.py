@@ -1,4 +1,5 @@
 import numpy as np
+from os import system, name
 
 world = []
 maxLength = 0 
@@ -80,7 +81,8 @@ def findSmallestPath(man,goal):
 def fsp(rowCol,goal,length,visited):
     global maxLength, iterations, allvisited
     iterations += 1
-    if iterations % 1000000 == 0: 
+    if iterations % 10000000 == 0:
+        system('clear')
         print(f'{iterations} : {length}')
         for row, rowVals in enumerate(world):
             for col, val in enumerate(rowVals):
@@ -89,7 +91,7 @@ def fsp(rowCol,goal,length,visited):
                 else:
                     print(dig:=chr(val.val), end=' ') 
             print()
-        print(f'{visited}-                  -                       -                          -                        -                       -                                -                       -                       - ')
+        # print(f'{visited}-                  -                       -                          -                        -                       -                                -                       -                       - ')
     # print(length)
     if rowCol == goal:
         print('found') 
@@ -246,11 +248,10 @@ def main(filename):
         for col, val in enumerate(rowVals):
             val.definePriorities(row, col)
             print(val.priorities)
-    print(world[man[0]][man[1]].down)
     print(ord('z'))
     findSmallestPath(man,goal)
     print(maxLength)
     
-    
-
-main('resources/input_12_test.txt')
+test = 'resources/input_12_test.txt'
+real = 'resources/input_12.txt'
+main(real)
