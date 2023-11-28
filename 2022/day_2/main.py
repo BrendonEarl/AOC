@@ -46,4 +46,4 @@ def main(filename):
     print(f'original: {play_game(strategy_guide)} \n revised: {play_game(strategy_guide,True)}')
 
 
-main('resources/input_2.txt')
+main('2022/resources/input_2.txt')

@@ -19,4 +19,4 @@ def main(filename):
           f'{totaloverlapping}')
 
 
-main('resources/input_4.txt')
+main('2022/resources/input_4.txt')

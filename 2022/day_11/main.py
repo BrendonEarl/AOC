@@ -99,7 +99,7 @@ def main(filename):
         
 #32396580048
 #32398740006 too high
-test = 'resources/input_11_test.txt'
-real = 'resources/input_11.txt'
+test = '2022/resources/input_11_test.txt'
+real = '2022/resources/input_11.txt'
 main(real)
 

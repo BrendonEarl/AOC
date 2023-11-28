@@ -43,6 +43,6 @@ def main(filename, part2=True):
     return(len(visited))   
 
             
-FILE_NAME = 'resources/input_9.txt'
+FILE_NAME = '2022/resources/input_9.txt'
 print(f' problem 1: {main(FILE_NAME)} \n'
       f' problem 2: {main(FILE_NAME,False)}')

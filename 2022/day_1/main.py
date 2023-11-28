@@ -21,4 +21,4 @@ def main(filename):
     print(f' one elf: {getMostCalories(arr, True)} \n'
           f' top three elves : {getMostCalories(arr, False)}')
 
-main('resources/input_1.txt')
+main('2022/resources/input_1.txt')

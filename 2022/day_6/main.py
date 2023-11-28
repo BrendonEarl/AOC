@@ -18,6 +18,6 @@ def main(filename, part2=True) -> int:
         drop()
         grab(crumb)
 
-filepath = "resources/input_6.txt"
+filepath = "2022/resources/input_6.txt"
 print(f'part1: {main(filepath, False)} \n'
       f'part2: {main(filepath)}')

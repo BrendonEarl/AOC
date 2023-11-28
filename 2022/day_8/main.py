@@ -30,4 +30,4 @@ def main(filename):
     print(f' problem 1: {prob1} \n'
           f' problem 2: {prob2}')
 
-main('resources/input_8.txt')
+main('2022/resources/input_8.txt')

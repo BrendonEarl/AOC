@@ -98,8 +98,8 @@ def main(filename, part1=False):
 
     print(playgame(cave,part1))
 
-real = 'resources/input_14.txt'
-test = 'resources/input_14_test.txt'
+real = '2022/resources/input_14.txt'
+test = '2022/resources/input_14_test.txt'
 
 
 main(real)

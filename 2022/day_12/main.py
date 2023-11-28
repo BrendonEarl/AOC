@@ -252,6 +252,6 @@ def main(filename):
     findSmallestPath(man,goal)
     print(maxLength)
     
-test = 'resources/input_12_test.txt'
-real = 'resources/input_12.txt'
+test = '2022/resources/input_12_test.txt'
+real = '2022/resources/input_12.txt'
 main(real)

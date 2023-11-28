@@ -100,4 +100,4 @@ def main(filename):
     execute(commands)
 
 
-main(filename:="resources/input_7.txt")
+main(filename:="2022/resources/input_7.txt")

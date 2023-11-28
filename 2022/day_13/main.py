@@ -77,7 +77,7 @@ def main(filename):
     print(f'pt2 {twoindex},{sixindex} : {twoindex*sixindex}')
 
 
-test = 'resources/input_13_test.txt'
-real = 'resources/input_13.txt'
+test = '2022/resources/input_13_test.txt'
+real = '2022/resources/input_13.txt'
 
 main(real)

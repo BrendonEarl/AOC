@@ -46,6 +46,6 @@ def main(filename, part2=True):
     [print(line.get(), end='') for line in ship]
     print()
 
-filepath = "resources/input_5.txt"
+filepath = "2022/resources/input_5.txt"
 main(filepath, False)
 main(filepath)

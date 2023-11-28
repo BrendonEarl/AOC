@@ -28,5 +28,5 @@ def main(filename):
         print('')
 
 
-main('resources/input_10.txt')
+main('2022/resources/input_10.txt')
 #720 too low

@@ -69,7 +69,7 @@ def main(filename):
             answer+= index+1
     print(answer)
 
-test = 'resources/input_13_test.txt'
-real = 'resources/input_13.txt'
+test = '2022/resources/input_13_test.txt'
+real = '2022/resources/input_13.txt'
 
 main(real)

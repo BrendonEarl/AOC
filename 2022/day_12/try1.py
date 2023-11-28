@@ -129,4 +129,4 @@ def main(filename):
 
 
 
-main('resources/input_12.txt')
+main('2022/resources/input_12.txt')

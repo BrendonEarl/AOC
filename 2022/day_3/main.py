@@ -32,4 +32,4 @@ def main(filename):
 
 
 
-main('resources/input_3.txt')
+main('2022/resources/input_3.txt')
