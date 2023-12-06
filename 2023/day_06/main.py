@@ -20,8 +20,8 @@ def main(filename, pt2=True):
         wins = 0 if time % 2 else -1
         minDist = dists[i]
         l, r = (
-            floor(time / 2) if time % 2 else time / 2,
-            ceil(time / 2) if time % 2 else time / 2,
+            floor(time / 2),
+            ceil(time / 2)
         )
 
         while l * r > minDist:
@@ -36,4 +36,5 @@ def main(filename, pt2=True):
 fn = "2023/resources/input_06.txt"
 fnt = "2023/resources/test.txt"
 
-print(f"pt1: {main(fn,False)}\n" f"pt2: {main(fn)}")
+print(f"pt1: {main(fn,False)}\n" 
+      f"pt2: {main(fn)}")
