@@ -113,4 +113,5 @@ def part2(filename):
 fn = "2023/resources/input_05.txt"
 fnt = "2023/resources/test.txt"
 
-print(f"pt1: {main(fn)}\n" f"pt2: {part2(fn)}")
+print(f"pt1: {main(fn)}\n" 
+      f"pt2: {part2(fn)}")
