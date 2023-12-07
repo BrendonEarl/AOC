@@ -28,20 +28,17 @@ def main(filename, pt1=False):
 
     for line in lines:
         hand,bet = line
-        r = []
+        r,nwilds = [],0
         for j, num in enumerate(hand):
             numsame = 1
-            
+            if num == 1:
+                nwilds += 1 
             for k, t in enumerate(hand):
                 if j==k: continue
                 numsame += 1 if num==t else 0
 
             r.append(numsame)
         r = sorted(r)
-
-        nwilds=0
-        for i,n in enumerate(hand):
-            nwilds += 1 if n==1 else 0
         
         if pt1 or (not nwilds):
             if (5 in r):
