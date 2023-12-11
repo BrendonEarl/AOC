@@ -4,17 +4,64 @@ import sys
 from time import sleep
 np.set_printoptions(threshold=sys.maxsize)
 
+IN, OUT = 1, 0 #switch based on puzzle
+dirs = {
+    'l' : ['u', 'd'],
+    'u' : ['r', 'l'],
+    'r' : ['d', 'u'],
+    'd' : ['l', 'r']
+}
 class Cell:
-    LEFT, UP, RIGHT, DOWN = 0, 1, 2, 3
 
     def __init__(self, v) -> None:
         self.v = v
         self.l, self.u, self.r, self.d = None, None, None, None
         self.connections = []
+        self.inLoop = False
+        self.b, self.a = None,None
+        self.ind, self.outd = '', ''
+        self.ins, self.outs = [],[]
+
 
     def setNeighbors(self, l: "Cell", u: "Cell", r: "Cell", d: "Cell"):
         self.l, self.u, self.r, self.d = l, u, r, d
         self.setConnections()
+
+    def setDirections(self):
+        
+        match self.b:
+            case self.l:
+                self.ind = 'r'
+            case self.u:
+                self.ind = 'd'
+            case self.r:
+                self.ind = 'l'
+            case self.d:
+                self.ind = 'u'
+            case _:
+                print(self)
+                print(self.b)
+                exit()
+        
+        match self.a:
+            case self.l:
+                self.outd = 'l'
+            case self.u:
+                self.outd = 'u'
+            case self.r:
+                self.outd = 'r'
+            case self.d:
+                self.outd = 'd'
+            case _:
+                print(self)
+                print(self.a)
+                exit()
+
+        self.ins.append(dirs[self.ind][IN])
+        if self.ind != self.outd:
+            self.ins.append(dirs[self.outd][IN])
+
+        
 
     def setConnections(self):
         up = ["|", "7", "F", "S"]
@@ -52,6 +99,7 @@ class Cell:
                     self.connections.append(self.r)
             case _:
                 pass
+
     def get(self,s):
         match s:
             case 'l':
@@ -70,13 +118,12 @@ class Cell:
         return self.v
 
 
-def main(fn, pt1=True):
+def main(fn, pt1=False):
     with open(fn) as f:
         lines = [[*line.strip()] for line in f]
     f.close
 
     maze = np.array(lines, dtype=object)
-    # print(maze)
 
     mrow, mcol = [m - 1 for m in maze.shape]
 
@@ -101,139 +148,93 @@ def main(fn, pt1=True):
             maze[i][j].setNeighbors(l, u, r, d)
 
     startr, startc = start
-
-    print(maze)
-
-    for i, line in enumerate(maze):
-        for j, ch in enumerate(line):
-            if not maze[i][j].connections:
-                maze[i][j].v = '.'
-    
     s = maze[startr][startc]
     check = s.connections[0]
-    used = [s,check]
-    while check.v != 'S':
-        print(f'{check} conn: {check.connections} - {check.connections[0] in used} {check.connections[1] in used}')
-        
-        
-        if all([c in used for c in check.connections]):
-            break
-        nxt = check.connections[0] if check.connections[0] not in used else check.connections[1]
-        check = nxt
-        used.append(nxt)
-    
+    s.a, check.b = check, s
+    s.inLoop, check.inLoop = True, True
 
-    # print(maze)
-    print(s)
-    print(int(floor(len(used))/2))
-
-    for line in maze:
-        for ch in line:
-            if ch not in used:
-                ch.v = '.'
-            else:
-                ch.v = '0'
-            print(ch,end='')
-        print()
-    
-
-    direction = ''
-    g,b = 0,2
-    t = ['l', 'u', 'r', 'd']
-    x = {
-        'l' : -1,
-        'r' : 1
-    }
-    p = {
-            'u' : {
-                'l': 'l',
-                'r': 'r'
-            },
-            'd' : {
-                'l' : 'r',
-                'r' : 'l',
-            },
-            'l' : {
-                'u' : 'r',
-                'd' : 'l',
-            },
-            'r' : {
-                'u' : 'l',
-                'd' : 'r'
-            },
-        }
-    y = {
-        -1 : 3,
-        4 : 0
-    }
-    for i, u in enumerate(used):
-        if i == 0: 
-            match used[1]:
-                case u.u:
-                    direction = 'u'
-                    g,b = 0,2
-                case u.d:
-                    direction = 'd'
-                    g,b = 0,2
-                case u.l:
-                    direction = 'l'
-                    g,b = 1,3
-                case u.r:
-                    direction = 'r'
-                    g,b = 1,3
-            continue
-        
-        good, bad = u.get(t[g]), u.get(t[b])
-
-        if bad.v == '.':
-            bad.v = '2'
-        if good.v in ['.','2']:
-            good.v = '1'
-        
-
-        match used[i-1]:
-            case u.d:
-                nd = 'u'
-            case u.u:
-                nd = 'd'
-            case u.l:
-                nd= 'r'
-            case u.r:
-                nd = 'l'
-        
-        if direction == nd:
-            pass
+    while check != s:
+            
+        one, two = check.connections
+        if not one.inLoop:
+            nxt = one
+        elif not two.inLoop:
+            nxt = two
         else:
-            print(f'{t[g]},{t[b]}',end=' ')
-            g = g + x[p[direction][nd]]
-            b = b + x[p[direction][nd]]
-            if b > 3 or b < 0:
-                b = y[b]
-            if g > 3 or g < 0:
-                g = y[g]
+            check.a = s
+            s.b = check
+            break
 
-            print(f'{direction}: {nd} turn {p[direction][nd]} - new {t[g]},{t[b]}')
-            direction = nd
-        
-        good, bad = u.get(t[g]), u.get(t[b])
+        nxt.inLoop = True
+        check.a, nxt.b = nxt, check
+        check = nxt
+    
+    if pt1:
+        check = s.a
+        summ = 1
+        while check != s:
+            nxt = check.a
+            summ +=1 
+            check = nxt
+        return int(floor(summ/2))
 
-        if bad.v == '.':
-            bad.v = '2'
-        if good.v in ['.','2']:
-            good.v = '1'
-        # if bad.v == '.':
-        #     bad.v = '2'
-   
     for line in maze:
         for ch in line:
+            if not ch.inLoop:
+                ch.v = '.'
+                ch.connections = []
             print(ch,end='')
         print()
-
-
-
+ 
+    check = s
+    while True:
+        check.setDirections()
+        for letter in check.ins:
+            test = check.get(letter)
+            if not test.inLoop:
+                test.v = 'I'
+        check = check.a
+        if check == s:
+            break
+    
+    
+    
+    for line in maze:
+        for j, ch in enumerate(line):
+            if ch.v == '.':
+                chain = [ch]
+                nxt = ch.r
+                while nxt and nxt.v == '.':
+                    chain.append(nxt)
+                    nxt = nxt.r
+                
+                if nxt and nxt.v == 'I':
+                    for c in chain:
+                        c.v = 'I'
+                else:
+                    for c in chain:
+                        c.v = 'O'
+    
+    print()
+    for line in maze:
+        for ch in line:
+            if ch.inLoop:
+                ch.v = '-'
+            print(ch,end='')
+        print()
+    
+    pt2 = 0
+    for line in maze:
+        for ch in line:
+            if ch.v == 'I':
+                pt2 += 1
+    
+    return pt2
 
 
 fn = "2023/resources/input_10.txt"
 fnt = "2023/resources/test10.txt"
+fntt = "2023/resources/test10_1.txt"
+fnttt = "2023/resources/test10_2.txt"
 
-print(f"pt1: {main(fnt)}")  # \npt2: {main(fn)}')
+print(f"pt1: {main(fn, True)}\npt2: {main(fn)}")
