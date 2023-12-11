@@ -41,17 +41,21 @@ def main(fn, pt1=False):
             t = []
             ts = d[s][lr[instructions[0]]]
             n,i=0,1
+            used = []
             print(f'{s} {ts}')
             while ts != s:
                 if i == ml:
                     i = 0
-                if ts[END] == 'Z':
-                    print(ts)
+                if ts not in used:
+                    print(f'{n} iterations \n{ts} \nused: {used}')
+                    used.append(ts)
+                if ts[-1] == 'Z':
                     t.append(n)
+                    print(f'--------------------{n}: {t}: {used}')
                 ts = d[s][lr[instructions[i]]]
                 i += 1
                 n += 1
-            
+                
             print(t)
                 
 
