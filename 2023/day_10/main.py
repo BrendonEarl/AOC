@@ -4,7 +4,7 @@ import sys
 from time import sleep
 np.set_printoptions(threshold=sys.maxsize)
 
-IN, OUT = 1, 0 #switch based on puzzle
+IN, OUT = 1, 0 #switch if not working
 dirs = {
     'l' : ['u', 'd'],
     'u' : ['r', 'l'],
@@ -20,7 +20,7 @@ class Cell:
         self.inLoop = False
         self.b, self.a = None,None
         self.ind, self.outd = '', ''
-        self.ins, self.outs = [],[]
+        self.ins = []
 
 
     def setNeighbors(self, l: "Cell", u: "Cell", r: "Cell", d: "Cell"):
@@ -28,40 +28,18 @@ class Cell:
         self.setConnections()
 
     def setDirections(self):
-        
-        match self.b:
-            case self.l:
-                self.ind = 'r'
-            case self.u:
-                self.ind = 'd'
-            case self.r:
-                self.ind = 'l'
-            case self.d:
-                self.ind = 'u'
-            case _:
-                print(self)
-                print(self.b)
-                exit()
-        
-        match self.a:
-            case self.l:
-                self.outd = 'l'
-            case self.u:
-                self.outd = 'u'
-            case self.r:
-                self.outd = 'r'
-            case self.d:
-                self.outd = 'd'
-            case _:
-                print(self)
-                print(self.a)
-                exit()
-
+        t = {
+            self.l : ['r', 'l'],
+            self.u : ['d', 'u'],
+            self.r : ['l', 'r'],
+            self.d : ['u', 'd'],
+        }
+        self.ind = t[self.b][0]
+        self.outd = t[self.a][1]
+            
         self.ins.append(dirs[self.ind][IN])
         if self.ind != self.outd:
             self.ins.append(dirs[self.outd][IN])
-
-        
 
     def setConnections(self):
         up = ["|", "7", "F", "S"]
@@ -101,15 +79,12 @@ class Cell:
                 pass
 
     def get(self,s):
-        match s:
-            case 'l':
-                return self.l
-            case 'u':
-                return self.u
-            case 'r':
-                return self.r
-            case 'd':
-                return self.d
+        return {
+            'l' : self.l,
+            'u' : self.u,
+            'r' : self.r,
+            'd' : self.d
+        }[s]
     
     def __repr__(self) -> str:
         return self.__str__()
@@ -197,8 +172,6 @@ def main(fn, pt1=False):
         if check == s:
             break
     
-    
-    
     for line in maze:
         for j, ch in enumerate(line):
             if ch.v == '.':
@@ -216,25 +189,19 @@ def main(fn, pt1=False):
                         c.v = 'O'
     
     print()
-    for line in maze:
-        for ch in line:
-            if ch.inLoop:
-                ch.v = '-'
-            print(ch,end='')
-        print()
-    
     pt2 = 0
     for line in maze:
         for ch in line:
             if ch.v == 'I':
                 pt2 += 1
+            if ch.inLoop:
+                ch.v = '-'
+            print(ch,end='')
+        print()
     
     return pt2
 
 
 fn = "2023/resources/input_10.txt"
-fnt = "2023/resources/test10.txt"
-fntt = "2023/resources/test10_1.txt"
-fnttt = "2023/resources/test10_2.txt"
 
 print(f"pt1: {main(fn, True)}\npt2: {main(fn)}")
