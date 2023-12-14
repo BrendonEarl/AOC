@@ -82,6 +82,7 @@ def main(fn, pt2 = True):
             
         return stress
     else:
+        stress = 0
         cols = lines.T
         for i in range(mc):
             for j in range(mr):
@@ -106,4 +107,4 @@ def main(fn, pt2 = True):
 fn = '2023/resources/input_14.txt'
 fnt = '2023/resources/test14.txt'
 
-print(f"pt1: {main(fn)}") #\npt2: {main(fn)}")
+print(f"pt1: {main(fn,False)}") #\npt2: {main(fn)}")
