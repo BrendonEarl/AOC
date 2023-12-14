@@ -4,7 +4,7 @@ lr = {
     'L' : 0,
     'R' : 1,
 }
-END = 2
+
 def main(fn, pt1=False):
     d = {}
     with open(fn) as f:
@@ -27,57 +27,53 @@ def main(fn, pt1=False):
             start = d[start][lr[instructions[i]]]
             n += 1
             i += 1
+        
         return n
     else:
         stime = time.time()
         start = []
         for key, _ in lines:
-            if key[0][END] == 'A':
+            if key[0][-1] == 'A':
                 start.append(key[0])
         
-        loops = [[] for s in start]
+        loops = []
         ml = len(instructions)
         for x,s in enumerate(start):
-            t = []
+            t = 0
             ts = d[s][lr[instructions[0]]]
-            n,i=0,1
-            used = []
-            print(f'{s} {ts}')
-            while ts != s:
-                if i == ml:
-                    i = 0
-                if ts not in used:
-                    print(f'{n} iterations \n{ts} \nused: {used}')
-                    used.append(ts)
+            n,i=1,1
+
+            while (ts != s):
+                
                 if ts[-1] == 'Z':
-                    t.append(n)
-                    print(f'--------------------{n}: {t}: {used}')
-                ts = d[s][lr[instructions[i]]]
+                    t = n
+                    break
+                    
+                ts = d[ts][lr[instructions[i]]]
                 i += 1
+                if i == ml: i = 0
                 n += 1
                 
-            print(t)
-                
+            loops.append(t)
+        mult = [loop for loop in loops]
+        count = 0
+        
 
-            print(f'{x} : {s}')
-
-        # n, i, ml = 0, 0, len(instructions)
-        # while not all(map(lambda x: x[END]=='Z', start)):
-        #     if i == ml:
-        #         i = 0
-        #     if n%10000000==0:
-        #         print(f'{n} => {start} {time.time() - stime}')
-        #     start = [d[s][lr[instructions[i]]] for s in start]
-        #     n += 1
-        #     i += 1
-
-        # return n
+        while not all([m==mult[0] for m in mult]):
+            count += 1
+            if not count % 1000000: print(f'{mult}: {int(count/1000000)}')
+            
+            m=max(mult)
+            for i, x in enumerate(mult):
+                if x < m:
+                    mult[i] += loops[i]
+        
+        print(f'{round(time.time()-stime)/60} mins')
+        return mult[0]
     
-
-
 
 fn = '2023/resources/input_08.txt'
 fnt = '2023/resources/test.txt'
 
-print(f'pt1: {main(fn)} \n')
-    #   f'pt2: {main(fn,False)}')
+print(f'pt1: {main(fn, True)} \n'
+      f'pt2: {main(fn)}')
