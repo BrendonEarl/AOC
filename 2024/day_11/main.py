@@ -4,8 +4,8 @@ def day_11(fn, pt1=True):
         stones = f.read().split()
     f.close()
 
+    ans = 0
     if pt1:
-        ans = 0
         for stone in stones:
             s = [stone]
             for i in range(25):
@@ -22,13 +22,10 @@ def day_11(fn, pt1=True):
                     else:
                         new.append(str(2024 * int(x)))
                 s = new
-            print(len(s))
-            ans += len(s)
-        print(ans)
-    else:
-        ans = 0
-        maxx = 0
 
+            ans += len(s)
+        return ans
+    else:
         for stone in stones:
             steps = {}
             s = [stone]
@@ -69,7 +66,9 @@ def day_11(fn, pt1=True):
                             ntrack[val] = n
                 track = ntrack
             ans += sum(track.values())
-    print(ans)
+    return ans
 
 filename = '../resources/input_11.txt'
+print(f"pt1: {day_11(filename)}\n"
+      f"pt2: {day_11(filename,False)}")
 day_11(filename,False)
