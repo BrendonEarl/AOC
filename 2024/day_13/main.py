@@ -9,6 +9,7 @@ def day_13(fn, pt=True):
         x,y = [int(j.split('+')[1]) for j in A.split(':')[1].strip().split(',')]
         z,q = [int(j.split('+')[1]) for j in B.split(':')[1].strip().split(',')]
         m,n = [int(j.split('=')[1]) for j in P.split(':')[1].strip().split(',')]
+
         print((x,y,z,q,m,n))
 
 
