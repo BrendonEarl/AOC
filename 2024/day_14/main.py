@@ -1,4 +1,5 @@
-from math import prod
+from math import prod, floor
+
 
 def day_14(fn, pt1=True):
     with open(fn) as f:
@@ -12,11 +13,34 @@ def day_14(fn, pt1=True):
         0, 0,
         0, 0
     ]
+
     for p,v in pv:
         col, row = p
         vcol, vrow = v
-        ecol,erow = (col + (100 * vcol)) % maxcol, (row + (100 * vrow)) % maxrow
-        # print((erow,ecol))
+        ecol,erow = (col + (100 * vcol)), (row + (100 * vrow))
+        test = ''
+
+        if ecol > 0:
+            ecol = ((ecol - 1) % maxcol) + 1
+        elif ecol == 0:
+            pass
+        else:
+            test = floor(ecol / maxcol)
+            while ecol < 0:
+                ecol += maxcol
+            ecol = (ecol+test)%maxcol
+
+        if erow > 0:
+            erow = ((erow - 1) % maxrow) + 1
+        elif erow == 0:
+            pass
+        else:
+            test = -1 * floor(erow / maxrow)
+            while erow < 0:
+                erow += maxrow
+            erow = (erow + test)%maxrow
+
+        print((ecol, erow, test))
         if ecol < midcol:
             if erow > midrow:
                 tots[2] += 1
@@ -27,15 +51,10 @@ def day_14(fn, pt1=True):
                 tots[3] += 1
             elif erow < midrow:
                 tots[1] += 1
-    col, row = 2, 4
-    vcol, vrow = 2, -3
-    for i in range(6):
-        ecol, erow = (col + (i * vcol)) , (row + (i * vrow))
-        
-        ecol, erow = ecol % maxcol, erow % maxrow
-        print(f"{i} => {(ecol,erow)}")
-    # print(prod(tots))
-    # print(tots)
+
+    print(prod(tots))
+    print(tots)
+
 
 
 
