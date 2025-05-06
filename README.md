@@ -1,3 +1,1 @@
-<details>
-    My attempt at the yearly Advent of Code challenge
-</details>
+My attempt at the yearly Advent of Code challenge
